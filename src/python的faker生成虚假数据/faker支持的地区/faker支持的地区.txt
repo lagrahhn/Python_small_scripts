@@ -1,0 +1,44 @@
+ar_EG-Arabic (Egypt)-阿拉伯语（埃及）
+ar_PS-Arabic (Palestine)-阿拉伯语（巴勒斯坦）
+ar_SA-Arabic (Saudi Arabia)-阿拉伯语（沙特阿拉伯）
+bg_BG-Bulgarian-保加利亚语
+bs_BA-Bosnian-波斯尼亚语
+cs_CZ-Czech-捷克语
+de_DE-German-德语
+dk_DK-Danish-丹麦语
+el_GR-Greek-希腊语
+en_AU-English (Australia)-英语（澳大利亚）
+en_CA-English (Canada)-英语（加拿大）
+en_GB-English (Great Britain)-英语（英国）
+en_NZ-English (New Zealand)-英语（新西兰）
+en_US-English (United States)-英语（美国）
+es_ES-Spanish (Spain)-西班牙语（西班牙）
+es_MX-Spanish (Mexico)-西班牙语（墨西哥）
+et_EE-Estonian-爱沙尼亚语
+fa_IR-Persian (Iran)-波斯语（伊朗）
+fi_FI-Finnish-芬兰语
+fr_FR-French-法语
+hi_IN-Hindi-印地语
+hr_HR-Croatian-克罗地亚语
+hu_HU-Hungarian-匈牙利语
+hy_AM-Armenian-亚美尼亚语
+it_IT-Italian-意大利语
+ja_JP-Japanese-日语
+ka_GE-Georgian (Georgia)-格鲁吉亚语（格鲁吉亚）
+ko_KR-Korean-朝鲜语
+lt_LT-Lithuanian-立陶宛语
+lv_LV-Latvian-拉脱维亚语
+ne_NP-Nepali-尼泊尔语
+nl_NL-Dutch (Netherlands)-荷兰语（荷兰）
+no_NO-Norwegian-挪威语
+pl_PL-Polish-波兰语
+pt_BR-Portuguese (Brazil)-葡萄牙语（巴西）
+pt_PT-Portuguese (Portugal)-葡萄牙语（葡萄牙）
+ro_RO-Romanian-罗马尼亚
+ru_RU-Russian-俄语
+sl_SI-Slovene-斯洛文尼亚人
+sv_SE-Swedish-瑞典语
+tr_TR-Turkish-土耳其语
+uk_UA-Ukrainian-乌克兰语
+zh_CN-Chinese (China Mainland)-中文（中国大陆）
+zh_TW-Chinese (China Taiwan)-中文（中国台湾）
