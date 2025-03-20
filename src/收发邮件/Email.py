@@ -3,14 +3,26 @@ import os
 import json
 import imaplib
 import email
-from email.header import Header
+import time
+import logging
+from email import message_from_bytes
+from dateutil import parser
+from email.header import Header, make_header
 from email.mime.base import MIMEBase
 import smtplib
+from email.utils import formataddr, parsedate_to_datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.header import decode_header
+
+
+password = "qnyxdfvdkqlgdcjh"
+Email_address = "3220135059@qq.com"
 
 class Plugin():
     
+    SLUG = "email"
+
     def __init__(self):
         self.load_config()
         self.sender_email = None
@@ -93,73 +105,107 @@ class Plugin():
             if server:  # 检查 server 是否存在
                 server.quit()
     
-    # TODO 待测试     
+    def group_send(self, subject, message, receivers):
+        for receiver in receivers:
+            self.send_email(subject, message, receiver)
+            
     def search_imap_by_part_content(self,search):
         server = imaplib.IMAP4_SSL(self.imap_server, self.imap_port)
         server.login(self.sender_email, self.sender_password)
+        # INBOX 收件箱
+        # Sent Messages 已发送
+        # Drafts 草稿箱
+        # Deleted Messages 已删除
+        # Junk 垃圾箱
         server.select('INBOX')
-        # 将search设置为utf-8编码
-        search = search.encode('utf-8')
-        result, data = server.search(None, search)
-        if result == 'OK':
-            for num in data[0].split():
-                print(num)
-                result, data = server.fetch(num, '(RFC822)') #  使用邮件编号从服务器获取邮件内容，'(RFC822)'表示获取完整的邮件内容
-                if result == 'OK':
-                    msg = email.message_from_bytes(data[0][1])
-                    # print(msg['From'], msg['Subject'])
+        
+        # 选择收件箱
+        # status: OK
+        status, search_data = server.search(None, search.encode("utf-8"))
+
+        # 一个数组，里面是邮件id
+        mail_list = search_data[0].split()
+        print(f"总共解析了{len(mail_list)}封邮件")
+        for mail_id in mail_list:
+            # result和上面的status一样，仍然是OK类型
+            result,data = server.fetch(mail_id,"(RFC822)")
+            if result == "OK":
+                email_message = message_from_bytes(data[0][1]) # 邮件内容（未解析）
+                # print(email_message)
+                subject = make_header(decode_header(email_message['SUBJECT']))
+                mail_from = make_header(decode_header(email_message['From']))
+                mail_time = parsedate_to_datetime(email_message['Date']).strftime("%Y-%m-%d %H:%M:%S")
+                # email_info = {
+                #     "主题": subject,
+                #     "发件人": mail_from,
+                #     "收件时间": mail_time
+                # }
+                print(subject)
+                print(mail_from)
+                print(mail_time)
+                # print(email_info)
         server.close()
         server.logout()
         return data
 
-    # TODO 待测试
     def search_imap_by_subject(self,search):
         server = imaplib.IMAP4_SSL(self.imap_server, self.imap_port)
 
         server.login(self.sender_email, self.sender_password)
         server.select('INBOX')
-        result, data = server.search(None, '(SUBJECT "{}")'.format(search))
+        result, data = server.search(None, 'ALL')
         if result == 'OK':
             for num in data[0].split():
                 result, data = server.fetch(num, '(RFC822)')
                 if result == 'OK':
-                    msg = email.message_from_bytes(data[0][1])
-                    print(msg['From'], msg['Subject'])
+                    email_message = message_from_bytes(data[0][1]) # 邮件内容（未解析）
+                    # print(email_message)
+                    subject = make_header(decode_header(email_message['SUBJECT']))
+                    mail_from = make_header(decode_header(email_message['From']))
+                    mail_time = parsedate_to_datetime(email_message['Date']).strftime("%Y-%m-%d %H:%M:%S")
+                    if search in str(subject):
+                        print(subject)
         server.close()
         server.logout()
         return data
     
-    # TODO 待测试
     def search_imap_by_sender(self,search):
         server = imaplib.IMAP4_SSL(self.imap_server, self.imap_port)
 
         server.login(self.sender_email, self.sender_password)
         server.select('INBOX')
-        result, data = server.search(None, '(FROM "{}")'.format(search))
+        result, data = server.search(None, 'ALL')
         if result == 'OK':
             for num in data[0].split():
                 result, data = server.fetch(num, '(RFC822)')
                 if result == 'OK':
-                    msg = email.message_from_bytes(data[0][1])
-                    print(msg['From'], msg['Subject'])
+                    email_message = message_from_bytes(data[0][1]) # 邮件内容（未解析）
+                    # print(email_message)
+                    subject = make_header(decode_header(email_message['SUBJECT']))
+                    mail_from = make_header(decode_header(email_message['From']))
+                    # mail_time = parsedate_to_datetime(email_message['Date']).strftime("%Y-%m-%d %H:%M:%S")
+                    if search in str(mail_from):
+                        print(subject)
         server.close()
         server.logout()
         return data
     
-    # TODO 待测试
-    def group_send(self, subject, message, receivers):
-        for receiver in receivers:
-            self.send_email(subject, message, receiver)
     
-    # TODO 待添加获取指定编号的邮件内容
+    
+    # TODO 添加获取指定编号的邮件内容
+    # TODO 添加删除指定邮件的操作
+    # TODO 添加编辑邮件的操作
     
     
 
 email_plugin = Plugin()        
 email_subject = "22"
 email_message = "33"
-recipient_email = "3220135059@qq.com"
-email_plugin.search_imap_by_part_content("你好")
+recipient_email = "my@qq.com"
+email_plugin.search_imap_by_sender("my@qq.com")
+# email_plugin.search_imap_by_subject("你好")
+# email_plugin.search_imap_by_part_content("你好")
 # email_plugin.send_email(email_subject,email_message,recipient_email)
 # email_plugin.send_email_with_attachment(email_subject,email_message,recipient_email,r"./image.png")
+# email_plugin.group_send(email_subject,email_message,[recipient_email,"my@163.com"])
 
